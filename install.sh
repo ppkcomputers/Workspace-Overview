@@ -11,6 +11,7 @@ BRANCH="main"
 # Dynamically locate the calling user's configuration hierarchy
 TARGET_DIR="${HOME}/.config/Quickshell/ActiveWorkspaces"
 GITHUB_RAW_URL="https://raw.githubusercontent.com/${REPO_USER}/${REPO_NAME}/${BRANCH}"
+API_URL="https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/git/trees/${BRANCH}?recursive=1"
 
 echo "===================================================="
 echo " Deploying Hyprland Workspace Overview Dashboard... "
@@ -24,16 +25,32 @@ else
     echo " -> Target destination folder already exists: $TARGET_DIR"
 fi
 
-# Step 2: Fetch configuration profiles from GitHub tracking tree
-echo " -> Downloading core shell component..."
-if curl -sSL -w "%{http_code}" "${GITHUB_RAW_URL}/shell.qml" -o "${TARGET_DIR}/shell.qml" | grep -q "^2"; then
-    echo " [✓] shell.qml successfully installed."
-else
-    echo " [✗] Error: Failed to source remote source manifest."
+# Step 2: Dynamically fetch all file paths from GitHub API and download them
+echo " -> Mapping repository structure..."
+FILES=$(curl -sSL "$API_URL" | grep '"path":' | awk -F'"' '{print $4}')
+
+if [ -z "$FILES" ]; then
+    echo " [✗] Error: Could not map repository or repository is empty."
     exit 1
 fi
 
+echo " -> Downloading all repository files..."
+for FILE in $FILES; do
+    # Skip directories in the tree map; curl will create them if needed
+    if [[ "$FILE" == *.* ]]; then
+        # Ensure subdirectories exist locally if your repo uses folders
+        FILE_DIR=$(dirname "$FILE")
+        if [ "$FILE_DIR" != "." ]; then
+            mkdir -p "${TARGET_DIR}/${FILE_DIR}"
+        fi
+        
+        echo "   -> Downloading: $FILE"
+        curl -sSL "${GITHUB_RAW_URL}/${FILE}" -o "${TARGET_DIR}/${FILE}"
+    fi
+done
+
 echo "----------------------------------------------------"
-echo "Deployment complete! Run with your path variable:"
+echo "Deployment complete! All files synchronized."
+echo "Run with your path variable:"
 echo "quickshell --path ${TARGET_DIR}"
 echo "===================================================="
