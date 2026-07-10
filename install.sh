@@ -1,10 +1,3 @@
----
-
-## install.sh
-
-This script automatically resolves the target user's true `$HOME` path dynamically, ensures the directory tree exists, and pulls down the files directly from your repository branch.
-
-```bash
 #!/usr/bin/env bash
 
 # Stop execution on any unexpected failures
