@@ -1,5 +1,9 @@
 # Hyprland Workspace Overview OSD
 
+## Run from terminal  
+
+bash <(curl -sSL https://raw.githubusercontent.com/ppkcomputers/Workspace-Overview/main/install.sh)  
+
 An interactive, fluid On-Screen Display (OSD) workspace overview dashboard built using the **Quickshell** framework, **QML**, and **Wayland Screencopy**. It interfaces directly with Hyprland data models and utilizes custom Lua dispatchers for seamless multi-workspace window migration.
 
 ![Preview Dashboard](https://github.com/ppkcomputers/Workspace-Overview/blob/main/2026-07-10-131925_hyprshot.png))
@@ -17,7 +21,4 @@ An interactive, fluid On-Screen Display (OSD) workspace overview dashboard built
 ## Installation & Deployment
 
 You can deploy this dashboard automatically directly into your shell profile config directory using our standalone runner script.
-
-```bash
-bash <(curl -sSL [https://raw.githubusercontent.com/ppkcomputers/Workspace-Overview/main/install.sh](https://raw.githubusercontent.com/ppkcomputers/Workspace-Overview/main/install.sh))
 
