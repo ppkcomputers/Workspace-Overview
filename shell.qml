@@ -60,29 +60,29 @@ ShellRoot {
                             model: Hyprland.workspaces
                             delegate: Rectangle {
                                 id: wsCard
-                                property var wsModel: modelData // Capture model data
-                                visible: wsModel.id > 0
+                                property var wsModel: modelData
+                                visible: wsModel && wsModel.id > 0
                                 width: visible ? 280 : 0
                                 height: visible ? parent.height - 10 : 0
                                 radius: 10
-                                color: wsModel.id === Hyprland.focusedWorkspace.id ? Qt.rgba(207/255, 214/255, 153/255, 0.18) : Qt.rgba(255, 255, 255, 0.02)
-                                border.color: wsModel.id === Hyprland.focusedWorkspace.id ? "#cfd699" : "#575742"
+                                color: (wsModel && Hyprland.focusedWorkspace && wsModel.id === Hyprland.focusedWorkspace.id) ? Qt.rgba(207/255, 214/255, 153/255, 0.18) : Qt.rgba(255, 255, 255, 0.02)
+                                border.color: (wsModel && Hyprland.focusedWorkspace && wsModel.id === Hyprland.focusedWorkspace.id) ? "#cfd699" : "#575742"
                                 border.width: 1
 
-                                MouseArea { anchors.fill: parent; onClicked: { body.y = -body.height; delayTrigger.targetWs = wsModel; delayTrigger.start() } }
+                                MouseArea { anchors.fill: parent; onClicked: { if (wsModel) { body.y = -body.height; delayTrigger.targetWs = wsModel; delayTrigger.start() } } }
 
                                 Rectangle {
                                     id: badge
                                     width: 32; height: 32; radius: 6; x: 12; y: 12
-                                    color: wsModel.id === Hyprland.focusedWorkspace.id ? "#cfd699" : "#313244"
-                                    Text { anchors.centerIn: parent; text: wsModel.id; color: wsModel.id === Hyprland.focusedWorkspace.id ? "#11111b" : "#cdd6f4"; font.bold: true; font.pixelSize: 14 }
+                                    color: (wsModel && Hyprland.focusedWorkspace && wsModel.id === Hyprland.focusedWorkspace.id) ? "#cfd699" : "#313244"
+                                    Text { anchors.centerIn: parent; text: wsModel ? wsModel.id : ""; color: (wsModel && Hyprland.focusedWorkspace && wsModel.id === Hyprland.focusedWorkspace.id) ? "#11111b" : "#cdd6f4"; font.bold: true; font.pixelSize: 14 }
                                 }
 
                                 Column {
                                     anchors { top: badge.bottom; left: parent.left; right: parent.right; bottom: parent.bottom; margins: 12 }
                                     spacing: 5
                                     Repeater {
-                                        model: wsModel.toplevels
+                                        model: wsModel ? wsModel.toplevels : null
                                         delegate: Rectangle {
                                             id: appItem
                                             width: parent.width; height: 110; color: Qt.rgba(0, 0, 0, 0.3); radius: 6; clip: true
@@ -120,8 +120,8 @@ ShellRoot {
                             model: Hyprland.workspaces
                             delegate: Rectangle {
                                 id: specialCard
-                                property var wsModel: modelData // Capture model data
-                                visible: wsModel.id < 0
+                                property var wsModel: modelData
+                                visible: wsModel && wsModel.id < 0
                                 width: visible ? 280 : 0
                                 height: visible ? parent.height - 10 : 0
                                 radius: 10
@@ -130,7 +130,7 @@ ShellRoot {
                                 border.width: 3
                                 z: 10
 
-                                MouseArea { anchors.fill: parent; onClicked: { body.y = -body.height; delayTrigger.targetWs = wsModel; delayTrigger.start() } }
+                                MouseArea { anchors.fill: parent; onClicked: { if (wsModel) { body.y = -body.height; delayTrigger.targetWs = wsModel; delayTrigger.start() } } }
 
                                 Rectangle {
                                     id: sBadge
@@ -143,7 +143,7 @@ ShellRoot {
                                     anchors { top: sBadge.bottom; left: parent.left; right: parent.right; bottom: parent.bottom; margins: 12 }
                                     spacing: 5
                                     Repeater {
-                                        model: wsModel.toplevels
+                                        model: wsModel ? wsModel.toplevels : null
                                         delegate: Rectangle {
                                             id: sAppItem
                                             width: parent.width; height: 110; color: Qt.rgba(0, 0, 0, 0.3); radius: 6; clip: true
