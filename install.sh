@@ -11,13 +11,20 @@ BRANCH="main"
 # Dynamically locate the calling user's configuration hierarchy
 TARGET_DIR="${HOME}/.config/Quickshell/ActiveWorkspaces"
 GITHUB_RAW_URL="https://raw.githubusercontent.com/${REPO_USER}/${REPO_NAME}/${BRANCH}"
-API_URL="https://api.github.com/repos/${REPO_USER}/${REPO_NAME}/git/trees/${BRANCH}?recursive=1"
 
 echo "===================================================="
 echo " Deploying Hyprland Workspace Overview Dashboard... "
 echo "===================================================="
 
-# Step 1: Enforce folder paths structure safely
+# Step 1: Check if Quickshell is installed on the system
+if ! command -v quickshell &> /dev/null; then
+    echo " [✗] Error: 'quickshell' is not installed or not in your PATH."
+    echo "     Please install Quickshell before running this setup script."
+    echo "===================================================="
+    exit 1
+fi
+
+# Step 2: Enforce folder paths structure safely
 if [ ! -d "$TARGET_DIR" ]; then
     echo " -> Creating target directory profile at: $TARGET_DIR"
     mkdir -p "$TARGET_DIR"
@@ -25,29 +32,24 @@ else
     echo " -> Target destination folder already exists: $TARGET_DIR"
 fi
 
-# Step 2: Dynamically fetch all file paths from GitHub API and download them
-echo " -> Mapping repository structure..."
-FILES=$(curl -sSL "$API_URL" | grep '"path":' | awk -F'"' '{print $4}')
-
-if [ -z "$FILES" ]; then
-    echo " [✗] Error: Could not map repository or repository is empty."
+# Step 3: Fetch configuration profiles from GitHub
+echo " -> Downloading core shell component..."
+if curl -sSL -w "%{http_code}" "${GITHUB_RAW_URL}/shell.qml" -o "${TARGET_DIR}/shell.qml" | grep -q "^2"; then
+    echo " [✓] shell.qml successfully installed."
+else
+    echo " [✗] Error: Failed to source shell.qml from remote repository."
     exit 1
 fi
 
-echo " -> Downloading all repository files..."
-for FILE in $FILES; do
-    # Skip directories in the tree map; curl will create them if needed
-    if [[ "$FILE" == *.* ]]; then
-        # Ensure subdirectories exist locally if your repo uses folders
-        FILE_DIR=$(dirname "$FILE")
-        if [ "$FILE_DIR" != "." ]; then
-            mkdir -p "${TARGET_DIR}/${FILE_DIR}"
-        fi
-        
-        echo "   -> Downloading: $FILE"
-        curl -sSL "${GITHUB_RAW_URL}/${FILE}" -o "${TARGET_DIR}/${FILE}"
-    fi
-done
+echo " -> Downloading toggle script component..."
+if curl -sSL -w "%{http_code}" "${GITHUB_RAW_URL}/slide.sh" -o "${TARGET_DIR}/slide.sh" | grep -q "^2"; then
+    echo " [✓] slide.sh successfully installed."
+    chmod +x "${TARGET_DIR}/slide.sh"
+    echo " [✓] Marked slide.sh as executable."
+else
+    echo " [✗] Error: Failed to source slide.sh from remote repository."
+    exit 1
+fi
 
 echo "----------------------------------------------------"
 echo "Deployment complete! All files synchronized."
