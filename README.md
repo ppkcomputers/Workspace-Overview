@@ -6,7 +6,7 @@ bash <(curl -sSL https://raw.githubusercontent.com/ppkcomputers/Workspace-Overvi
 
 An interactive, fluid On-Screen Display (OSD) workspace overview dashboard built using the **Quickshell** framework, **QML**, and **Wayland Screencopy**. It interfaces directly with Hyprland data models and utilizes custom Lua dispatchers for seamless multi-workspace window migration.
 
-![Preview Dashboard](https://github.com/ppkcomputers/Workspace-Overview/blob/main/2026-07-10-131925_hyprshot.png))
+![Preview Dashboard](https://github.com/ppkcomputers/Workspace-Overview/blob/main/2026-07-10-131925_hyprshot.png)
 
 ## Features
 
