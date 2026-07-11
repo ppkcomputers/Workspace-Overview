@@ -1,4 +1,4 @@
-# Hyprland Workspace Overview OSD
+# Hyprland Workspace Overview OSD - Hyproverview
 
 ## Run from terminal  
 
