@@ -18,7 +18,11 @@ An interactive, fluid On-Screen Display (OSD) workspace overview dashboard built
 *   **Fluid Animations:** Built-in slide-in panel easing transitions with a custom pulsing focus-ring aesthetic.
 *   **External Signal Listener:** Monitors system flags (via `/tmp/overview_exit_flag`) for instant background toggle handling and clean service teardowns.
 
-## Installation & Deployment
+## Installation & Deployment  
+
+## Hyprland.lua keybinding  
+-- Replace /path/to/script/ with the actual location of your file
+hl.bind("SUPER + O", hl.dsp.exec_cmd("bash /home/yourusername/.config/hypr/scripts/slide.sh"))
 
 You can deploy this dashboard automatically directly into your shell profile config directory using our standalone runner script.
 
