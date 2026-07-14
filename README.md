@@ -23,6 +23,7 @@ An interactive, fluid On-Screen Display (OSD) workspace overview dashboard built
 
 
 ## Hyprland.lua keybinding  
--- Replace /path/to/script/ with the actual location of your file
+-- Replace /path/to/script/ with the actual location of your file  
+
 hl.bind("SUPER + O", hl.dsp.exec_cmd("bash /home/yourusername/.config/hypr/scripts/slide.sh"))
 
